@@ -1,8 +1,8 @@
 module.exports = getSettings
 
 function getSettings(qs) {
-  const graphSettings = getAvailableGraphs(qs); 
-  const pathFinderSettings = getAvailablePathfinders(qs); 
+  const graphSettings = getAvailableGraphs(qs);
+  const pathFinderSettings = getAvailablePathfinders(qs);
 
   return {
     graphSettings,
@@ -13,23 +13,8 @@ function getSettings(qs) {
 
 function getAvailableGraphs(qs) {
   let graphs = [{
-    value: 'amsterdam-roads',
-    name: 'Amsterdam (76K edges, 1.1 MB)'
-  }, {
-    value: 'seattle-roads',
-    name: 'Seattle (173K edges, 2.4 MB)'
-  }, {
-    value: 'rome-roads',
-    name: 'Rome (258K edges, 3.8 MB)'
-  }, {
-    value: 'delhi-roads',
-    name: 'Delhi (280K edges, 3.9 MB)'
-  }, {
-    value: 'moscow-roads',
-    name: 'Moscow (451K edges, 6.5 MB)'
-  }, {
-    value: 'USA-road-d.NY',
-    name: 'New York (730K edges, 7.6 MB)'
+    value: 'h3_face_uk',
+    name: 'Delhi (82K edges, 3.9 MB)'
   },
   // Commenting this out, as on mobile devices it may crash the browser.
   //  {
@@ -46,7 +31,7 @@ function getAvailableGraphs(qs) {
 
 function getAvailablePathfinders(qs) {
   return {
-    selected: qs.get('finder') || 'nba',
+    selected: qs.get('finder') || 'dijkstra',
     algorithms: [{
       value: 'a-greedy-star',
       name: 'Greedy A* (suboptimal)'

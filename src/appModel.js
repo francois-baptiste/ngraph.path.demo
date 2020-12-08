@@ -23,7 +23,7 @@ const bus = require('./bus');
 
 // First of all, read what we currently have in the query string.
 const qs = queryState({
-  graph: 'amsterdam-roads'
+  graph: 'h3_face_uk'
 });
 
 qs.onChange(updateStateFromQueryString);
@@ -61,7 +61,7 @@ const api = {
   progress: new Progress(),
   stats,
 
-  routeStart, 
+  routeStart,
   routeEnd,
   pathInfo: {
     svgPath: '',
@@ -81,7 +81,7 @@ module.exports = api;
 // The app model is ready at this point.
 
 function updateStateFromQueryString(queryState) {
-  let searchChanged = (queryState.fromId !== routeStart.pointId) || 
+  let searchChanged = (queryState.fromId !== routeStart.pointId) ||
                       (queryState.toId !== routeEnd.pointId);
 
   if (searchChanged) {
@@ -121,7 +121,7 @@ function updateRoute() {
   if (!(routeStart.visible && routeEnd.visible)) {
     api.pathInfo.svgPath = '';
     return;
-  } 
+  }
 
   let fromId = routeStart.pointId;
   let toId = routeEnd.pointId;
@@ -132,7 +132,7 @@ function updateRoute() {
   let end = window.performance.now() - start;
 
   api.pathInfo.noPath = path.length === 0;
-  api.pathInfo.svgPath = getSvgPath(path);
+  api.pathInfo.svgPath = getSvgPath(path.map(l => l.data));
 
   stats.lastSearchTook = (Math.round(end * 100)/100) + 'ms';
   stats.pathLength = getPathLength(path);
@@ -145,7 +145,7 @@ function updateQueryString() {
     // need to throttle
     clearTimeout(pendingQueryStringUpdate);
     pendingQueryStringUpdate = 0;
-  } 
+  }
 
   pendingQueryStringUpdate = setTimeout(() => {
     pendingQueryStringUpdate = 0;
@@ -247,15 +247,15 @@ function initPathfinders() {
   pathFindersLookup = {
     'a-greedy-star': npath.aGreedy(graph, {
       distance: distance,
-      heuristic: distance
+      heuristic: heuristic
     }),
     'nba': npath.nba(graph, {
       distance: distance,
-      heuristic: distance
+      heuristic: heuristic
     }),
     'astar-uni': npath.aStar(graph, {
       distance: distance,
-      heuristic: distance
+      heuristic: heuristic
     }),
     'dijkstra': npath.aStar(graph, {
       distance: distance
@@ -301,7 +301,7 @@ function numberWithCommas(x) {
 }
 
 function findPath(fromId, toId) {
-  return pathFinder.find(fromId, toId).map(l => l.data);
+  return pathFinder.find(fromId, toId);
 }
 
 function getSvgPath(points) {
@@ -343,13 +343,23 @@ function pointDistance(src, x, y) {
   return Math.sqrt(dx * dx + dy * dy);
 }
 
-function distance(a, b) {
-  return dataDistance(a.data, b.data);
+function distance(fromNode, toNode) {
+  for (let i = 0; i < fromNode.links.length; ++i) {
+    if (fromNode.links[i].fromId == toNode.id) return fromNode.links[i].data["weight"];
+    if (fromNode.links[i].toId == toNode.id) return fromNode.links[i].data["weight"];
+  }
 }
 
-function dataDistance(a, b) {
-  let dx = a.x - b.x;
-  let dy = a.y - b.y;
+function heuristic(fromNode, toNode) {
+  for (let i = 0; i < fromNode.links.length; ++i) {
+    if (fromNode.links[i].fromId == toNode.id) return fromNode.links[i].data["weight"];
+    if (fromNode.links[i].toId == toNode.id) return fromNode.links[i].data["weight"];
+  }
+}
 
-  return Math.sqrt(dx * dx + dy * dy)
+function dataDistance(fromNode, toNode) {
+  for (let i = 0; i < fromNode.links.length; ++i) {
+    if (fromNode.links[i].fromId == toNode.id) return fromNode.links[i].data["weight"];
+    if (fromNode.links[i].toId == toNode.id) return fromNode.links[i].data["weight"];
+  }
 }

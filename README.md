@@ -1,6 +1,6 @@
 # ngraph.path demo
 
-[![demo](https://raw.githubusercontent.com/anvaka/ngraph.path/master/docs/seattle.gif)](https://anvaka.github.io/ngraph.path.demo/)
+[![demo](https://raw.githubusercontent.com/anvaka/ngraph.path/master/docs/seattle.gif)](https://francois-baptiste.github.io/ngraph.path.demo/)
 
 This repository is a demo for the [ngraph.path](https://github.com/anvaka/ngraph.path) library.
 While its main purpose is to show the capabilities of the library, below you can find some

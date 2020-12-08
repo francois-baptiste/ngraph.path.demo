@@ -92,15 +92,16 @@ function loadPositions(fileName, progress) {
         progress.linksReady = true;
         console.log(graph.getLinksCount() + ' edges; ' + graph.getNodesCount() + ' nodes.')
         resolve();
-      }, { step: 2 });
+      }, { step: 3 });
     });
   }
 
   function addLinkToGraph(fromShifted, i, links) {
     let fromId = fromShifted - 1;
     let toId = links[i + 1] - 1;
+    let weight = links[i + 2];
 
-    graph.addLink(fromId, toId);
+    graph.addLink(fromId, toId,{weight: weight});
 
     if (i % 500 === 0) {
       progress.completed = Math.round(100 * i/links.length) + '%';
